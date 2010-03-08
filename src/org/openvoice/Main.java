@@ -96,7 +96,7 @@ public class Main extends Activity {
         String url = "/phone_numbers/locate_user";
         String params = "?format=json&phone_number=" + phoneNumber;
 //        URI uri = new URI(SERVER_URL + url + params);
-        URI uri = new URI(SERVER_URL_DEV + url + params);
+        URI uri = new URI(SERVER_URL + url + params);
         HttpGet method = new HttpGet(uri);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = client.execute(method, responseHandler);
@@ -119,7 +119,7 @@ public class Main extends Activity {
     	DefaultHttpClient client = new DefaultHttpClient();
     	try {
     		String url = "/user_sessions/create?user_session[login]=zlu&user_session[password]=flute&format=json";
-    		URI uri = new URI(SERVER_URL_DEV + url);
+    		URI uri = new URI(SERVER_URL + url);
     		HttpPost method = new HttpPost(uri);
     		ResponseHandler<String>	responseHandler = new BasicResponseHandler();
     		String responseBody = client.execute(method, responseHandler);
