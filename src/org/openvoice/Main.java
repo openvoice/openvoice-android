@@ -49,7 +49,13 @@ public class Main extends Activity {
     }
     
     void showMessages(String[][] messages) {
-      mMessageListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, messages[0]));
+    	String [] condensedMessages = new String[messages.length];
+    	int i = 0;
+    	for(String[] m : messages) {
+    		condensedMessages[i] = m[0] + ": " + m[1];
+    		i++;
+    	}
+      mMessageListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, condensedMessages));
       //mMessageListView.setTextFilterEnabled(true);      
     }
     

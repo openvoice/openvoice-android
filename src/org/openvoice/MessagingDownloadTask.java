@@ -42,7 +42,6 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
 
   public boolean downloadStatus() {
     DefaultHttpClient client = new DefaultHttpClient();
-    String[][] mMessages = null;
     try {
       String user_id = mPrefs.getString(org.openvoice.Main.PREF_USER_ID, "");
       String token = mPrefs.getString(org.openvoice.Main.PREF_TOKEN, "");
@@ -56,10 +55,9 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
           JSONArray jsons = new JSONArray(responseBody);
           mMessages = new String[jsons.length()][2];
           for(int i=0; i<jsons.length(); i++) {
-            JSONObject json = jsons.getJSONObject(i);
-            JSONArray ar = json.toJSONArray(json.names());
-            JSONObject elem = ar.getJSONObject(0);
-            extract_status(mMessages, i, elem);
+            JSONObject json = jsons.getJSONObject(i);            
+            JSONObject message = json.getJSONObject("messaging");
+            extract_status(i, message);
           }
         } catch(JSONException jsone) {
           try {
@@ -67,7 +65,7 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
             JSONArray ar = json.toJSONArray(json.names());
             JSONObject elem = ar.getJSONObject(0);
             mMessages = new String[1][2];
-            extract_status(mMessages, 0, elem);
+            extract_status(0, elem);
           } catch(JSONException e) {
             Log.e(getClass().getName(), e.getMessage());
           }
@@ -76,7 +74,7 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
 //        boolean shouldSync = !localStatus.equals(stat[0][0]);
 //        if(shouldSync) {
 //          StatusDBOpenHelper.getInstance(mContext).insertTwitterStatus(stat[0][0], stat[0][1]);
-//          return true;
+          return true;
 //        }        
       }
     } catch (Exception e) {
@@ -87,9 +85,9 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
     return false;
   }
 
-  private void extract_status(String[][] stat, int i, JSONObject elem)
+  private void extract_status(int i, JSONObject elem)
   throws JSONException {
-    stat[i][0] = elem.getString("from");
-    stat[i][1] = new Long(elem.getLong("text")).toString();
+    mMessages[i][0] = elem.getString("from");
+    mMessages[i][1] = elem.getString("text");
   }
 }
