@@ -20,7 +20,8 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
 	private org.openvoice.Main mMain;
   private Context mContext;
   private SharedPreferences mPrefs;
-
+  private String[][] mMessages;
+  
   public MessagingDownloadTask(Context context, org.openvoice.Main main) {
     mContext = context;
     mMain = main;
@@ -35,13 +36,13 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
   @Override
   protected void onPostExecute(Boolean result) {
     if(result) {
-      mMain.showMessages();
+      mMain.showMessages(mMessages);
     }
   }
 
   public boolean downloadStatus() {
     DefaultHttpClient client = new DefaultHttpClient();
-    String[][] stat = null;
+    String[][] mMessages = null;
     try {
       String user_id = mPrefs.getString(org.openvoice.Main.PREF_USER_ID, "");
       String token = mPrefs.getString(org.openvoice.Main.PREF_TOKEN, "");
@@ -53,20 +54,20 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
       if( responseBody != null && responseBody != "") {
         try {
           JSONArray jsons = new JSONArray(responseBody);
-          stat = new String[jsons.length()][2];
+          mMessages = new String[jsons.length()][2];
           for(int i=0; i<jsons.length(); i++) {
             JSONObject json = jsons.getJSONObject(i);
             JSONArray ar = json.toJSONArray(json.names());
             JSONObject elem = ar.getJSONObject(0);
-            extract_status(stat, i, elem);
+            extract_status(mMessages, i, elem);
           }
         } catch(JSONException jsone) {
           try {
             JSONObject json = new JSONObject(responseBody);
             JSONArray ar = json.toJSONArray(json.names());
             JSONObject elem = ar.getJSONObject(0);
-            stat = new String[1][2];
-            extract_status(stat, 0, elem);
+            mMessages = new String[1][2];
+            extract_status(mMessages, 0, elem);
           } catch(JSONException e) {
             Log.e(getClass().getName(), e.getMessage());
           }

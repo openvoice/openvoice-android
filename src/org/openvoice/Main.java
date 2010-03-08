@@ -15,6 +15,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class Main extends Activity {
 	
@@ -27,6 +29,9 @@ public class Main extends Activity {
   public static final String PREF_PHONE_NUMBER = "MyPhoneNumber";
   public static final String PREF_TOKEN = "Token";
 
+  private ListView mMessageListView;
+  private String [] mMessages;
+  
   /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,13 +39,18 @@ public class Main extends Activity {
         setContentView(R.layout.main);
         Context context = getApplicationContext();
         mPrefs = context.getSharedPreferences(PREFERENCES_NAME, MODE_WORLD_READABLE);
+        
+        mMessageListView = (ListView) findViewById(R.id.MessagesListView);
+
+        
         locatePhoneNumber();
         login();
         handleUserMessaging();
     }
     
-    void showMessages() {
-    	
+    void showMessages(String[][] messages) {
+      mMessageListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, messages[0]));
+      //mMessageListView.setTextFilterEnabled(true);      
     }
     
     private void handleUserMessaging() {
