@@ -1,13 +1,23 @@
 package org.openvoice;
 
-import android.app.Activity;
+import java.io.IOException;
+
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
-public class VoicemailsActivity extends Activity {
+public class VoicemailsActivity extends ListActivity {
 	
 	private SharedPreferences mPrefs;
   private ListView mVoicemailListView;
@@ -15,13 +25,16 @@ public class VoicemailsActivity extends Activity {
   
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
-    setContentView(R.layout.voicemails);
+    //setContentView(R.layout.voicemails);
+    // Use our own list adapter
+
     Context context = getApplicationContext();
     mPrefs = context.getSharedPreferences(MessagingsActivity.PREFERENCES_NAME, MODE_WORLD_READABLE);
     
     mVoicemailListView = (ListView) findViewById(R.id.VoicemailsListView);
     
     handleUserVoicemail();
+    
 	}
 
   private void handleUserVoicemail() {
@@ -32,10 +45,144 @@ public class VoicemailsActivity extends Activity {
   	String [] condensedVoicemails = new String[voicemails.length];
   	int i = 0;
   	for(String[] m : voicemails) {
-  		condensedVoicemails[i] = m[0] + ": " + m[1];
+  		condensedVoicemails[i] = m[i];
   		i++;
   	}
-    mVoicemailListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, condensedVoicemails));
+//    mVoicemailListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, condensedVoicemails));
     //mMessageListView.setTextFilterEnabled(true);      
-  }  
+    setListAdapter(new VoicemailListAdapter(this, condensedVoicemails));
+
+    MediaPlayer mp = new MediaPlayer();
+    
+    Uri path = Uri.parse(voicemails[0][1]);
+    try {
+	    mp.setDataSource(this, path);
+	    mp.prepare();
+	    mp.start();
+    } catch (IllegalArgumentException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+    } catch (SecurityException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+    } catch (IllegalStateException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+    } catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+    }
+  }
+
+  /**
+   * A sample ListAdapter that presents content from arrays of speeches and
+   * text.
+   * 
+   */
+  private class VoicemailListAdapter extends BaseAdapter {
+      public VoicemailListAdapter(Context context, String[] from) {
+          mContext = context;
+          mVoicemails = from;
+          mPlay = new String[from.length];
+          for(int i=0; i<mVoicemails.length; i++) {
+          	mPlay[i] = "Play";
+          }
+      }
+
+      /**
+       * The number of items in the list is determined by the number of speeches
+       * in our array.
+       * 
+       * @see android.widget.ListAdapter#getCount()
+       */
+      public int getCount() {
+          return mVoicemails.length;
+      }
+
+      /**
+       * Since the data comes from an array, just returning the index is
+       * sufficent to get at the data. If we were using a more complex data
+       * structure, we would return whatever object represents one row in the
+       * list.
+       * 
+       * @see android.widget.ListAdapter#getItem(int)
+       */
+      public Object getItem(int position) {
+          return position;
+      }
+
+      /**
+       * Use the array index as a unique id.
+       * 
+       * @see android.widget.ListAdapter#getItemId(int)
+       */
+      public long getItemId(int position) {
+          return position;
+      }
+
+      /**
+       * Make a SpeechView to hold each row.
+       * 
+       * @see android.widget.ListAdapter#getView(int, android.view.View,
+       *      android.view.ViewGroup)
+       */
+      public View getView(int position, View convertView, ViewGroup parent) {
+          VoicemailView sv;
+          if (convertView == null) {
+              sv = new VoicemailView(mContext, mVoicemails[position],
+                      mPlay[position]);
+          } else {
+              sv = (VoicemailView) convertView;
+              sv.setTitle(mVoicemails[position]);
+              sv.setDialogue(mPlay[position]);
+          }
+
+          return sv;
+      }
+
+      private Context mContext;
+      private String[] mVoicemails;
+      private String[] mPlay;
+  }
+  
+  /**
+   * We will use a SpeechView to display each speech. It's just a LinearLayout
+   * with two text fields.
+   *
+   */
+  private class VoicemailView extends LinearLayout {
+      public VoicemailView(Context context, String title, String words) {
+          super(context);
+          this.setOrientation(VERTICAL);
+          // Here we build the child views in code. They could also have
+          // been specified in an XML file.
+          mFrom = new TextView(context);
+          mFrom.setText(title);
+          addView(mFrom, new LinearLayout.LayoutParams(
+                  LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
+          mPlayButton = new Button(context);
+          mPlayButton.setText(words);
+          addView(mPlayButton, new LinearLayout.LayoutParams(
+                  LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+      }
+
+      /**
+       * Convenience method to set the title of a SpeechView
+       */
+      public void setTitle(String title) {
+          mFrom.setText(title);
+      }
+
+      /**
+       * Convenience method to set the dialogue of a SpeechView
+       */
+      public void setDialogue(String words) {
+          mPlayButton.setText(words);
+      }
+
+      private TextView mFrom;
+      private Button mPlayButton;
+  }
+ 
 }
