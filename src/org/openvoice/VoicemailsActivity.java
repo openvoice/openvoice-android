@@ -32,16 +32,7 @@ public class VoicemailsActivity extends ListActivity {
   }
   
   void showVoicemails(String[][] voicemails) {
-//  	String [] condensedVoicemails = new String[voicemails.length];
-//  	int i = 0;
-//  	for(String[] m : voicemails) {
-//  		condensedVoicemails[i] = m[i];
-//  		i++;
-//  	}
-    
     setListAdapter(new VoicemailListAdapter(this, voicemails));
-
-
   }
 
   /**
