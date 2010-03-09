@@ -10,31 +10,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class VoicemailsActivity extends ListActivity {
 	
 	private SharedPreferences mPrefs;
-  private ListView mVoicemailListView;
   private String [] mVoicemails;
   
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
-    //setContentView(R.layout.voicemails);
-    // Use our own list adapter
-
     Context context = getApplicationContext();
     mPrefs = context.getSharedPreferences(MessagingsActivity.PREFERENCES_NAME, MODE_WORLD_READABLE);
-    
-    mVoicemailListView = (ListView) findViewById(R.id.VoicemailsListView);
-    
-    handleUserVoicemail();
-    
+    handleUserVoicemail();    
 	}
 
   private void handleUserVoicemail() {
@@ -42,36 +32,16 @@ public class VoicemailsActivity extends ListActivity {
   }
   
   void showVoicemails(String[][] voicemails) {
-  	String [] condensedVoicemails = new String[voicemails.length];
-  	int i = 0;
-  	for(String[] m : voicemails) {
-  		condensedVoicemails[i] = m[i];
-  		i++;
-  	}
-//    mVoicemailListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, condensedVoicemails));
-    //mMessageListView.setTextFilterEnabled(true);      
-    setListAdapter(new VoicemailListAdapter(this, condensedVoicemails));
-
-    MediaPlayer mp = new MediaPlayer();
+//  	String [] condensedVoicemails = new String[voicemails.length];
+//  	int i = 0;
+//  	for(String[] m : voicemails) {
+//  		condensedVoicemails[i] = m[i];
+//  		i++;
+//  	}
     
-    Uri path = Uri.parse(voicemails[0][1]);
-    try {
-	    mp.setDataSource(this, path);
-	    mp.prepare();
-	    mp.start();
-    } catch (IllegalArgumentException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-    } catch (SecurityException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-    } catch (IllegalStateException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-    } catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-    }
+    setListAdapter(new VoicemailListAdapter(this, voicemails));
+
+
   }
 
   /**
@@ -80,11 +50,14 @@ public class VoicemailsActivity extends ListActivity {
    * 
    */
   private class VoicemailListAdapter extends BaseAdapter {
-      public VoicemailListAdapter(Context context, String[] from) {
+      public VoicemailListAdapter(Context context, String[][] voicemails) {
           mContext = context;
-          mVoicemails = from;
-          mPlay = new String[from.length];
-          for(int i=0; i<mVoicemails.length; i++) {
+          mFrom = new String[voicemails.length];
+          mPath = new String[voicemails.length];
+          mPlay = new String[voicemails.length];
+          for(int i=0; i<mFrom.length; i++) {
+          	mFrom[i] = voicemails[i][0];
+          	mPath[i] = voicemails[i][1];
           	mPlay[i] = "Play";
           }
       }
@@ -96,7 +69,7 @@ public class VoicemailsActivity extends ListActivity {
        * @see android.widget.ListAdapter#getCount()
        */
       public int getCount() {
-          return mVoicemails.length;
+          return mFrom.length;
       }
 
       /**
@@ -129,11 +102,11 @@ public class VoicemailsActivity extends ListActivity {
       public View getView(int position, View convertView, ViewGroup parent) {
           VoicemailView sv;
           if (convertView == null) {
-              sv = new VoicemailView(mContext, mVoicemails[position],
-                      mPlay[position]);
+              sv = new VoicemailView(mContext, mFrom[position], mPath[position], mPlay[position]);
           } else {
               sv = (VoicemailView) convertView;
-              sv.setTitle(mVoicemails[position]);
+              sv.setTitle(mFrom[position]);
+              sv.setPath(mPath[position]);
               sv.setDialogue(mPlay[position]);
           }
 
@@ -141,7 +114,8 @@ public class VoicemailsActivity extends ListActivity {
       }
 
       private Context mContext;
-      private String[] mVoicemails;
+      private String[] mFrom;
+      private String[] mPath;
       private String[] mPlay;
   }
   
@@ -151,9 +125,10 @@ public class VoicemailsActivity extends ListActivity {
    *
    */
   private class VoicemailView extends LinearLayout {
-      public VoicemailView(Context context, String title, String words) {
+      public VoicemailView(Context context, String title, String path, String words) {
           super(context);
           this.setOrientation(VERTICAL);
+          mContext = context;
           // Here we build the child views in code. They could also have
           // been specified in an XML file.
           mFrom = new TextView(context);
@@ -161,12 +136,44 @@ public class VoicemailsActivity extends ListActivity {
           addView(mFrom, new LinearLayout.LayoutParams(
                   LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
+          mPath = path;
+          
           mPlayButton = new Button(context);
           mPlayButton.setText(words);
+          mPlayButton.setOnClickListener(mPlayClickListener);
           addView(mPlayButton, new LinearLayout.LayoutParams(
                   LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       }
+      
+      private View.OnClickListener mPlayClickListener = new View.OnClickListener() {
+        public void onClick(View view) {
+          MediaPlayer mp = new MediaPlayer();
+          
+          Uri path = Uri.parse(mPath);
+          try {
+      	    mp.setDataSource(mContext, path);
+      	    mp.prepare();
+      	    mp.start();
+          } catch (IllegalArgumentException e) {
+      	    // TODO Auto-generated catch block
+      	    e.printStackTrace();
+          } catch (SecurityException e) {
+      	    // TODO Auto-generated catch block
+      	    e.printStackTrace();
+          } catch (IllegalStateException e) {
+      	    // TODO Auto-generated catch block
+      	    e.printStackTrace();
+          } catch (IOException e) {
+      	    // TODO Auto-generated catch block
+      	    e.printStackTrace();
+          }
+        }
+      };
 
+      public void setPath(String path) {
+      	mPath = path;
+      }
+      
       /**
        * Convenience method to set the title of a SpeechView
        */
@@ -181,7 +188,9 @@ public class VoicemailsActivity extends ListActivity {
           mPlayButton.setText(words);
       }
 
+      private Context mContext;
       private TextView mFrom;
+      private String mPath;
       private Button mPlayButton;
   }
  
