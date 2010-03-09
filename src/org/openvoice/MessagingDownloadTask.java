@@ -17,15 +17,15 @@ import android.util.Log;
 
 public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
 
-	private org.openvoice.Main mMain;
+	private org.openvoice.MessagingsActivity mMain;
   private Context mContext;
   private SharedPreferences mPrefs;
   private String[][] mMessages;
   
-  public MessagingDownloadTask(Context context, org.openvoice.Main main) {
+  public MessagingDownloadTask(Context context, org.openvoice.MessagingsActivity main) {
     mContext = context;
     mMain = main;
-    mPrefs = context.getSharedPreferences(org.openvoice.Main.PREFERENCES_NAME, Context.MODE_WORLD_READABLE);    
+    mPrefs = context.getSharedPreferences(org.openvoice.MessagingsActivity.PREFERENCES_NAME, Context.MODE_WORLD_READABLE);    
   }  
 
   @Override
@@ -43,10 +43,10 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
   public boolean downloadStatus() {
     DefaultHttpClient client = new DefaultHttpClient();
     try {
-      String user_id = mPrefs.getString(org.openvoice.Main.PREF_USER_ID, "");
-      String token = mPrefs.getString(org.openvoice.Main.PREF_TOKEN, "");
+      String user_id = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_USER_ID, "");
+      String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
       String addr = "/users/" + user_id + "/messagings?format=json&token=" + token; 
-      URI uri = new URI(org.openvoice.Main.SERVER_URL + addr);
+      URI uri = new URI(org.openvoice.MessagingsActivity.SERVER_URL + addr);
       HttpGet method = new HttpGet(uri);
       ResponseHandler<String> responseHandler = new BasicResponseHandler();
       String responseBody = client.execute(method, responseHandler);
