@@ -54,11 +54,9 @@ public class VoicemailsActivity extends ListActivity {
           mContext = context;
           mFrom = new String[voicemails.length];
           mPath = new String[voicemails.length];
-          mPlay = new String[voicemails.length];
           for(int i=0; i<mFrom.length; i++) {
           	mFrom[i] = voicemails[i][0];
           	mPath[i] = voicemails[i][1];
-          	mPlay[i] = "Play";
           }
       }
 
@@ -102,12 +100,11 @@ public class VoicemailsActivity extends ListActivity {
       public View getView(int position, View convertView, ViewGroup parent) {
           VoicemailView sv;
           if (convertView == null) {
-              sv = new VoicemailView(mContext, mFrom[position], mPath[position], mPlay[position]);
+              sv = new VoicemailView(mContext, mFrom[position], mPath[position]);
           } else {
               sv = (VoicemailView) convertView;
               sv.setTitle(mFrom[position]);
               sv.setPath(mPath[position]);
-              sv.setDialogue(mPlay[position]);
           }
 
           return sv;
@@ -116,7 +113,6 @@ public class VoicemailsActivity extends ListActivity {
       private Context mContext;
       private String[] mFrom;
       private String[] mPath;
-      private String[] mPlay;
   }
   
   /**
@@ -125,7 +121,7 @@ public class VoicemailsActivity extends ListActivity {
    *
    */
   private class VoicemailView extends LinearLayout {
-      public VoicemailView(Context context, String title, String path, String words) {
+      public VoicemailView(Context context, String title, String path) {
           super(context);
           this.setOrientation(VERTICAL);
           mContext = context;
@@ -139,7 +135,7 @@ public class VoicemailsActivity extends ListActivity {
           mPath = path;
           
           mPlayButton = new Button(context);
-          mPlayButton.setText(words);
+          mPlayButton.setText("Play");
           mPlayButton.setOnClickListener(mPlayClickListener);
           addView(mPlayButton, new LinearLayout.LayoutParams(
                   LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -179,13 +175,6 @@ public class VoicemailsActivity extends ListActivity {
        */
       public void setTitle(String title) {
           mFrom.setText(title);
-      }
-
-      /**
-       * Convenience method to set the dialogue of a SpeechView
-       */
-      public void setDialogue(String words) {
-          mPlayButton.setText(words);
       }
 
       private Context mContext;
