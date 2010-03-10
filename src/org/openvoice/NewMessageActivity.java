@@ -84,7 +84,8 @@ public class NewMessageActivity extends Activity {
       DefaultHttpClient client = new DefaultHttpClient();
       String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
       try {
-        String params = "&format=json&messaging[user_id]=" + mUserID + "&messaging[text]=" + Uri.encode(text) + "&token=" + token + "&messaging[to]=blah";
+      	String to = getIntent().getExtras().getString(MessagingsActivity.EXTRA_TO);
+        String params = "&format=json&messaging[user_id]=" + mUserID + "&messaging[text]=" + Uri.encode(text) + "&token=" + token + "&messaging[to]=" + to;
         URI uri = new URI(MessagingsActivity.SERVER_URL + "/messagings/create?" + params);
         HttpPost method = new HttpPost(uri);
 //        HttpResponse response = client.execute(method);
