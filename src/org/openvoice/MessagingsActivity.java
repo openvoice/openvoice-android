@@ -11,10 +11,13 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -29,6 +32,8 @@ public class MessagingsActivity extends Activity {
   public static final String PREF_PHONE_NUMBER = "MyPhoneNumber";
   public static final String PREF_TOKEN = "Token";
 
+  public static final String EXTRA_TO = "org.openvoice.extra.TO";
+  
   private ListView mMessageListView;
   private String [] mMessages;
   
@@ -55,6 +60,14 @@ public class MessagingsActivity extends Activity {
     		i++;
     	}
       mMessageListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, condensedMessages));
+      mMessageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long row_id) {
+          Intent newMessageIntent = new Intent(getApplicationContext(), NewMessageActivity.class);
+//          TextView contactNameView = (TextView) ((RelativeLayout)arg1).findViewById(R.id.contact_name);
+          newMessageIntent.putExtra(EXTRA_TO, "14084978571");
+          startActivity(newMessageIntent);
+        }
+      });
       //mMessageListView.setTextFilterEnabled(true);      
     }
     

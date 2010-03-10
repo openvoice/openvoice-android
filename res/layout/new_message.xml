@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+  <TextView android:id="@+id/reply_friend_name"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dip"
+    android:layout_marginRight="5dip"
+    android:textSize="18sp"/>
+
+  <TextView android:id="@+id/reply_friend_status"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dip"
+    android:layout_marginRight="5dip"
+    android:layout_below="@id/reply_friend_name"
+    android:textSize="18sp"/>
+
+    <EditText android:id="@+id/reply_text_edit"
+              android:layout_height="wrap_content"
+              android:layout_width="fill_parent"
+              android:layout_below="@id/reply_friend_status"
+              android:layout_marginLeft="5dip"
+              android:layout_marginRight="5dip"
+              android:scrollHorizontally="true"
+              android:autoText="false"
+              android:capitalize="none"
+              android:gravity="fill_horizontal"
+              android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
+              android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <Button android:id="@+id/reply_friend_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reply_text_edit" android:text="@string/send"/>
+
+    <Button android:id="@+id/reply_friend_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reply_text_edit"
+            android:layout_toRightOf="@id/reply_friend_send"
+            android:text="@string/cancel"/>          
+
+</RelativeLayout>
