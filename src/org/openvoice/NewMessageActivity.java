@@ -2,7 +2,6 @@ package org.openvoice;
 
 import java.net.URI;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -26,6 +25,7 @@ public class NewMessageActivity extends Activity {
 	
   private Button mSendButton;
   private Button mCancelButton;
+  private Button mCallButton;
 
   private String mUserID;
   
@@ -44,6 +44,9 @@ public class NewMessageActivity extends Activity {
 
     mCancelButton = (Button) findViewById(R.id.reply_friend_cancel);
     mCancelButton.setOnClickListener(mCancelClickListener);
+    
+    mCallButton = (Button) findViewById(R.id.call_button);
+    mCallButton.setOnClickListener(mCallClickListener);
   }
 
   private void setContactInfo() {
@@ -72,6 +75,13 @@ public class NewMessageActivity extends Activity {
     }
   };
 
+  private View.OnClickListener mCallClickListener = new View.OnClickListener() {
+    public void onClick(View view) {
+      new CallTask().execute();
+    	finish();
+    }
+  };
+  
   class CreateReplyTask extends AsyncTask<String, Void, Void> {
 
     @Override
@@ -100,5 +110,36 @@ public class NewMessageActivity extends Activity {
         // TODO cleanup
       }
     }
+  }
+  
+  class CallTask extends AsyncTask<String, Void, Void> {
+
+		@Override
+    protected Void doInBackground(String... params) {
+	    initiateCall();
+	    return null;
+    }
+		
+		public void initiateCall() {
+      DefaultHttpClient client = new DefaultHttpClient();
+      String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
+      try {
+      	String to = getIntent().getExtras().getString(MessagingsActivity.EXTRA_TO);
+        String params = "&format=json&user_id=" + mUserID + "&token=" + token + "&voice_call[to]=" + to;
+        URI uri = new URI(MessagingsActivity.SERVER_URL + "/voice_calls/create?" + params);
+        HttpPost method = new HttpPost(uri);
+//        HttpResponse response = client.execute(method);
+        
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        String responseBody = client.execute(method, responseHandler);
+        
+        System.out.println(responseBody);
+      } catch (Exception e) {
+        Log.e(getClass().getName(), e.getMessage());
+      } finally {
+        // TODO cleanup
+      }
+    }
+  	
   }
 }

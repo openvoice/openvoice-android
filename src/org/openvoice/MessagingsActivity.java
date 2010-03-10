@@ -53,7 +53,7 @@ public class MessagingsActivity extends Activity {
     }
     
     void showMessages(String[][] messages) {
-    	String [] condensedMessages = new String[messages.length];
+    	final String [] condensedMessages = new String[messages.length];
     	int i = 0;
     	for(String[] m : messages) {
     		condensedMessages[i] = m[0] + ": " + m[1];
@@ -64,7 +64,9 @@ public class MessagingsActivity extends Activity {
         public void onItemClick(AdapterView<?> arg0, View arg1, int position, long row_id) {
           Intent newMessageIntent = new Intent(getApplicationContext(), NewMessageActivity.class);
 //          TextView contactNameView = (TextView) ((RelativeLayout)arg1).findViewById(R.id.contact_name);
-          newMessageIntent.putExtra(EXTRA_TO, "14084978571");
+          String selected = condensedMessages[position];
+          String to = selected.substring(0, selected.indexOf(":"));
+          newMessageIntent.putExtra(EXTRA_TO, to);
           startActivity(newMessageIntent);
         }
       });

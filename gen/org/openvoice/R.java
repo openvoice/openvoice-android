@@ -15,7 +15,8 @@ public final class R {
     }
     public static final class id {
         public static final int MessagesListView=0x7f050000;
-        public static final int VoicemailsListView=0x7f050006;
+        public static final int VoicemailsListView=0x7f050007;
+        public static final int call_button=0x7f050006;
         public static final int reply_friend_cancel=0x7f050005;
         public static final int reply_friend_name=0x7f050001;
         public static final int reply_friend_send=0x7f050004;
@@ -30,6 +31,7 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040001;
+        public static final int call=0x7f040004;
         public static final int cancel=0x7f040002;
         public static final int hello=0x7f040000;
         public static final int send=0x7f040003;

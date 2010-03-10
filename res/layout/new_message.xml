@@ -42,4 +42,10 @@
             android:layout_toRightOf="@id/reply_friend_send"
             android:text="@string/cancel"/>          
 
+    <Button android:id="@+id/call_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reply_text_edit"
+            android:layout_toRightOf="@id/reply_friend_cancel"
+            android:text="@string/call"/>   
 </RelativeLayout>
