@@ -43,11 +43,14 @@ public class VoicemailsActivity extends ListActivity {
   private class VoicemailListAdapter extends BaseAdapter {
       public VoicemailListAdapter(Context context, String[][] voicemails) {
           mContext = context;
-          mFrom = new String[voicemails.length];
-          mPath = new String[voicemails.length];
+          int length = voicemails.length;
+          mFrom = new String[length];
+          mText = new String[length];
+          mPath = new String[length];
           for(int i=0; i<mFrom.length; i++) {
           	mFrom[i] = voicemails[i][0];
-          	mPath[i] = voicemails[i][1];
+          	mText[i] = voicemails[i][1];
+          	mPath[i] = voicemails[i][2];
           }
       }
 
@@ -91,10 +94,10 @@ public class VoicemailsActivity extends ListActivity {
       public View getView(int position, View convertView, ViewGroup parent) {
           VoicemailView sv;
           if (convertView == null) {
-              sv = new VoicemailView(mContext, mFrom[position], mPath[position]);
+              sv = new VoicemailView(mContext, mFrom[position], mText[position], mPath[position]);
           } else {
               sv = (VoicemailView) convertView;
-              sv.setTitle(mFrom[position]);
+              sv.setTitle(mFrom[position] + ": " + mText[position]);
               sv.setPath(mPath[position]);
           }
 
@@ -103,6 +106,7 @@ public class VoicemailsActivity extends ListActivity {
 
       private Context mContext;
       private String[] mFrom;
+      private String[] mText;
       private String[] mPath;
   }
   
@@ -112,14 +116,14 @@ public class VoicemailsActivity extends ListActivity {
    *
    */
   private class VoicemailView extends LinearLayout {
-      public VoicemailView(Context context, String title, String path) {
+      public VoicemailView(Context context, String title, String text, String path) {
           super(context);
           this.setOrientation(VERTICAL);
           mContext = context;
           // Here we build the child views in code. They could also have
           // been specified in an XML file.
           mFrom = new TextView(context);
-          mFrom.setText(title);
+          mFrom.setText(title + ": " + text);
           addView(mFrom, new LinearLayout.LayoutParams(
                   LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
@@ -170,6 +174,7 @@ public class VoicemailsActivity extends ListActivity {
 
       private Context mContext;
       private TextView mFrom;
+      //private String mText; //transcription for voicemail
       private String mPath;
       private Button mPlayButton;
   }

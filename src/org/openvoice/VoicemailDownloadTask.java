@@ -53,7 +53,7 @@ public class VoicemailDownloadTask extends AsyncTask<String, Void, Boolean> {
       if( responseBody != null && responseBody != "") {
         try {
           JSONArray jsons = new JSONArray(responseBody);
-          mVoicemails = new String[jsons.length()][2];
+          mVoicemails = new String[jsons.length()][3];
           for(int i=0; i<jsons.length(); i++) {
             JSONObject json = jsons.getJSONObject(i);            
             JSONObject message = json.getJSONObject("voicemail");
@@ -64,7 +64,7 @@ public class VoicemailDownloadTask extends AsyncTask<String, Void, Boolean> {
             JSONObject json = new JSONObject(responseBody);
             JSONArray ar = json.toJSONArray(json.names());
             JSONObject elem = ar.getJSONObject(0);
-            mVoicemails = new String[1][2];
+            mVoicemails = new String[1][3];
             extract_status(0, elem);
           } catch(JSONException e) {
             Log.e(getClass().getName(), e.getMessage());
@@ -88,6 +88,7 @@ public class VoicemailDownloadTask extends AsyncTask<String, Void, Boolean> {
   private void extract_status(int i, JSONObject elem)
   throws JSONException {
     mVoicemails[i][0] = elem.getString("from");
-    mVoicemails[i][1] = elem.getString("filename");
+    mVoicemails[i][1] = elem.getString("text");    
+    mVoicemails[i][2] = elem.getString("filename");
   }
 }
