@@ -48,7 +48,7 @@ public class VoicemailsActivity extends ListActivity {
           mText = new String[length];
           mPath = new String[length];
           for(int i=0; i<mFrom.length; i++) {
-          	mFrom[i] = voicemails[i][0];
+          	mFrom[i] = voicemails[i][0];          	
           	mText[i] = voicemails[i][1];
           	mPath[i] = voicemails[i][2];
           }
