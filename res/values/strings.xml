@@ -5,4 +5,6 @@
 <string name="cancel">Cancel</string>
 <string name="send">Send</string>
 <string name="call">Call</string>
+<string name="username">OpenVoice user name</string>
+<string name="authenticate">authenticate</string>
 </resources>

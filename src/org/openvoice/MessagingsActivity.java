@@ -23,8 +23,8 @@ import android.widget.ListView;
 
 public class MessagingsActivity extends Activity {
 	
-	protected static String SERVER_URL_DEV = "http://web1.tunnlr.com:10790";
-	protected static String SERVER_URL = "http://tropovoice.heroku.com";
+	protected static String SERVER_URL = "http://web1.tunnlr.com:10790";
+//	protected static String SERVER_URL = "http://tropovoice.heroku.com";
 	
   private SharedPreferences mPrefs;
   public static final String PREFERENCES_NAME = "OpenVoice";
@@ -124,7 +124,7 @@ public class MessagingsActivity extends Activity {
         }
       } catch (Exception e) {
         Log.e(getClass().getName(), e.getMessage());
-      } finally {
+      } finally {	
         // TODO fill in blanks 
       }
     }

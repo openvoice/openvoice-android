@@ -8,12 +8,9 @@
       
     <application android:icon="@drawable/icon" android:label="@string/app_name">
         <activity android:name=".MessagingsActivity" />
-        <activity android:name=".NewMessageActivity" />
-        
-
-        <activity android:name=".VoicemailsActivity">
-        
-        </activity>
+        <activity android:name=".NewMessageActivity" />        
+        <activity android:name=".InboundCallActivity" />        
+        <activity android:name=".VoicemailsActivity" />
         
         <activity android:name=".Tabs" android:label="@string/app_name">
             <intent-filter>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+  <TextView android:id="@+id/ov_username_label"
+    android:text="@string/username"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dip"
+    android:layout_marginRight="5dip"
+    android:textSize="18sp"/>
+        
+    <EditText
+        android:id="@+id/ov_username"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:layout_below="@id/ov_username_label"
+        android:scrollHorizontally="true"
+        android:autoText="false"
+        android:capitalize="none"
+        android:gravity="fill_horizontal"
+        android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/ov_password"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:layout_below="@id/ov_username"
+        android:scrollHorizontally="true"
+        android:autoText="false"
+        android:capitalize="none"
+        android:gravity="fill_horizontal"
+        android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
+        android:textAppearance="?android:attr/textAppearanceMedium" />           
+           
+    <Button android:id="@+id/authenticate_button" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" 
+    android:text="@string/authenticate"
+    android:layout_below="@id/ov_password" />
+
+
+</RelativeLayout>

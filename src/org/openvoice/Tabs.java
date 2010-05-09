@@ -16,7 +16,15 @@ public class Tabs extends TabActivity {
       Intent intent = new Intent().setClass(this, MessagingsActivity.class);
       spec = tabHost.newTabSpec("messages").setIndicator("messages").setContent(intent);
       tabHost.addTab(spec);
-      
+
+      intent = new Intent().setClass(this, InboundCallActivity.class);
+      spec = tabHost.newTabSpec("inbound").setIndicator("inbound").setContent(intent);
+      tabHost.addTab(spec);
+
+      intent = new Intent().setClass(this, InboundCallActivity.class);
+      spec = tabHost.newTabSpec("outbound").setIndicator("outbound").setContent(intent);
+      tabHost.addTab(spec);
+
       intent = new Intent().setClass(this, VoicemailsActivity.class);
       spec = tabHost.newTabSpec("voicemails").setIndicator("voicemails").setContent(intent);
       tabHost.addTab(spec);
