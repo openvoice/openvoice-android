@@ -21,7 +21,7 @@ public class Tabs extends TabActivity {
       spec = tabHost.newTabSpec("inbound").setIndicator("inbound").setContent(intent);
       tabHost.addTab(spec);
 
-      intent = new Intent().setClass(this, InboundCallActivity.class);
+      intent = new Intent().setClass(this, OutboundCallActivity.class);
       spec = tabHost.newTabSpec("outbound").setIndicator("outbound").setContent(intent);
       tabHost.addTab(spec);
 
