@@ -18,12 +18,9 @@
             android:layout_below="@id/recipient_number"
             android:layout_marginLeft="5dip"
             android:layout_marginRight="5dip"
-            android:scrollHorizontally="true"
-            android:autoText="false"
-            android:capitalize="none"
+            android:scrollHorizontally="false"
             android:gravity="fill_horizontal"
-            android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" android:inputType="textAutoCorrect|textMultiLine|textShortMessage"/>
 
   <Button android:id="@+id/reply_friend_send"
           android:layout_width="wrap_content"
