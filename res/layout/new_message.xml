@@ -8,9 +8,11 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="5dip"
     android:layout_marginRight="5dip"
+    android:hint="To"
     android:textSize="14sp"/>
 
   <EditText android:id="@+id/new_message_text"
+            android:hint="Type your message"
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
             android:layout_below="@id/recipient_number"
