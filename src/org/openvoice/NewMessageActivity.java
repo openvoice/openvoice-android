@@ -25,7 +25,6 @@ public class NewMessageActivity extends Activity {
 
 	private TextView mRecipientView; 
   private Button mSendButton;
-  private Button mCancelButton;
   private Button mCallButton;
 
   private String mUserID;
@@ -42,9 +41,6 @@ public class NewMessageActivity extends Activity {
     
     mSendButton = (Button) findViewById(R.id.reply_friend_send);
     mSendButton.setOnClickListener(mSendClickListener);
-
-    mCancelButton = (Button) findViewById(R.id.reply_friend_cancel);
-    mCancelButton.setOnClickListener(mCancelClickListener);
     
     mCallButton = (Button) findViewById(R.id.call_button);
     mCallButton.setOnClickListener(mCallClickListener);
@@ -77,12 +73,6 @@ public class NewMessageActivity extends Activity {
       }
 
       new CreateReplyTask().execute(text);
-      finish();
-    }
-  };
-
-  private View.OnClickListener mCancelClickListener = new View.OnClickListener() {
-    public void onClick(View view) {
       finish();
     }
   };
