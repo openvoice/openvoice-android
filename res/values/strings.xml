@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, Main!</string>
-    <string name="app_name">OpenVoice</string>
+<string name="app_name">OpenVoice</string>
 <string name="cancel">Cancel</string>
 <string name="send">Send</string>
 <string name="call">Call</string>
 <string name="username">OpenVoice user name</string>
 <string name="authenticate">authenticate</string>
+<string name="new_thing">New</string>
 </resources>

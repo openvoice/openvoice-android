@@ -16,6 +16,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,8 +26,8 @@ import android.widget.ListView;
 
 public class MessagingsActivity extends Activity {
 	
-	protected static String SERVER_URL = "http://web1.tunnlr.com:10790";
-//	protected static String SERVER_URL = "http://tropovoice.heroku.com";
+//	protected static String SERVER_URL = "http://web1.tunnlr.com:10790";
+	protected static String SERVER_URL = "http://tropovoice.heroku.com";
 	
   private SharedPreferences mPrefs;
   public static final String PREFERENCES_NAME = "OpenVoice";
@@ -147,4 +150,20 @@ public class MessagingsActivity extends Activity {
     	}
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+      super.onCreateOptionsMenu(menu);
+      MenuInflater inflater = getMenuInflater();
+      inflater.inflate(R.menu.new_message, menu);
+      return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+        case R.id.new_message:
+          startActivity(new Intent(this, NewMessageActivity.class));
+      }
+      return false;
+    }    
 }

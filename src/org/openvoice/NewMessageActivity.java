@@ -22,7 +22,8 @@ import android.widget.Toast;
 
 public class NewMessageActivity extends Activity {
 	private SharedPreferences mPrefs;
-	
+
+	private TextView mRecipientView; 
   private Button mSendButton;
   private Button mCancelButton;
   private Button mCallButton;
@@ -50,22 +51,33 @@ public class NewMessageActivity extends Activity {
   }
 
   private void setContactInfo() {
-    TextView contactNameView = (TextView) findViewById(R.id.reply_friend_name);    
-    contactNameView.setText("To: " + getIntent().getExtras().getString(MessagingsActivity.EXTRA_TO));
-//    TextView contactStatusView = (TextView) findViewById(R.id.reply_friend_status);
-//    contactStatusView.setText("Re: " + getIntent().getExtras().getString(Status.EXTRA_FRIEND_STATUS));
+    mRecipientView = (TextView) findViewById(R.id.recipient_number);    
+    try {
+    	String recipient_number = getIntent().getExtras().getString(MessagingsActivity.EXTRA_TO);
+    	if(recipient_number != null) {
+    		mRecipientView.setText(recipient_number);
+    	}
+    } catch(NullPointerException npe) {
+    	Log.i(getClass().getName(), "creating new message without recipient number in the intent extra");
+    }
   }
 
   private View.OnClickListener mSendClickListener = new View.OnClickListener() {
     public void onClick(View view) {
-      EditText editText = (EditText) findViewById(R.id.reply_text_edit);
-      String text = editText.getText().toString(); 
-      if(!text.equals("")) {
-        new CreateReplyTask().execute(text);
-        finish();
-      } else {
-        Toast.makeText(getApplicationContext(), "Please write a reply", Toast.LENGTH_SHORT).show();
+      EditText editText = (EditText) findViewById(R.id.new_message_text);
+      String text = editText.getText().toString();
+      if(text.equals("")) {
+      	Toast.makeText(getApplicationContext(), "Please write a reply", Toast.LENGTH_SHORT).show();
+      	return;
       }
+
+      if(mRecipientView.getText().equals("")) {
+      	Toast.makeText(getApplicationContext(), "Please specify a recipient", Toast.LENGTH_SHORT).show();
+      	return;
+      }
+
+      new CreateReplyTask().execute(text);
+      finish();
     }
   };
 
@@ -94,18 +106,15 @@ public class NewMessageActivity extends Activity {
       DefaultHttpClient client = new DefaultHttpClient();
       String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
       try {
-      	String to = getIntent().getExtras().getString(MessagingsActivity.EXTRA_TO);
-        String params = "&format=json&messaging[user_id]=" + mUserID + "&messaging[text]=" + Uri.encode(text) + "&token=" + token + "&messaging[to]=" + to;
+      	String recipientNumber = mRecipientView.getText().toString();
+        String params = "&format=json&messaging[user_id]=" + mUserID + "&messaging[text]=" + Uri.encode(text) + "&token=" + token + "&messaging[to]=" + recipientNumber;
         URI uri = new URI(MessagingsActivity.SERVER_URL + "/messagings/create?" + params);
         HttpPost method = new HttpPost(uri);
-//        HttpResponse response = client.execute(method);
-        
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = client.execute(method, responseHandler);
-        
-        System.out.println(responseBody);
+//        System.out.println(responseBody);
       } catch (Exception e) {
-        Log.e(getClass().getName(), e.getMessage());
+        Log.e(getClass().getName(), e.getMessage() == null ? "Error sending message" : e.getMessage());
       } finally {
         // TODO cleanup
       }
@@ -124,18 +133,15 @@ public class NewMessageActivity extends Activity {
       DefaultHttpClient client = new DefaultHttpClient();
       String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
       try {
-      	String to = getIntent().getExtras().getString(MessagingsActivity.EXTRA_TO);
-        String params = "&format=json&user_id=" + mUserID + "&token=" + token + "&voice_call[to]=" + to;
+      	String recipientNumber = mRecipientView.getText().toString();
+        String params = "&format=json&user_id=" + mUserID + "&token=" + token + "&voice_call[to]=" + recipientNumber;
         URI uri = new URI(MessagingsActivity.SERVER_URL + "/voice_calls/create?" + params);
         HttpPost method = new HttpPost(uri);
-//        HttpResponse response = client.execute(method);
-        
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = client.execute(method, responseHandler);
-        
-        System.out.println(responseBody);
+//        System.out.println(responseBody);
       } catch (Exception e) {
-        Log.e(getClass().getName(), e.getMessage());
+        Log.e(getClass().getName(), e.getMessage() == null ? "Error placing call" : e.getMessage());
       } finally {
         // TODO cleanup
       }
