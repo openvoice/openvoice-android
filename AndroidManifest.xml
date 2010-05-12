@@ -12,6 +12,7 @@
         <activity android:name=".MessagingsActivity" />
         <activity android:name=".NewMessageActivity" />        
         <activity android:name=".InboundCallActivity" />        
+        <activity android:name=".NewCallActivity" />        
         <activity android:name=".OutboundCallActivity" />        
         <activity android:name=".VoicemailsActivity" />
         

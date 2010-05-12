@@ -24,28 +24,32 @@ public final class R {
     public static final class id {
         public static final int CallListView=0x7f060000;
         public static final int MessagesListView=0x7f060005;
-        public static final int VoicemailsListView=0x7f06000a;
+        public static final int VoicemailsListView=0x7f06000b;
         public static final int authenticate_button=0x7f060004;
-        public static final int call_button=0x7f060009;
-        public static final int new_message=0x7f06000b;
-        public static final int new_message_text=0x7f060007;
+        public static final int call_button=0x7f060007;
+        public static final int callee_number=0x7f060006;
+        public static final int new_call=0x7f06000c;
+        public static final int new_message=0x7f06000d;
+        public static final int new_message_text=0x7f060009;
         public static final int ov_password=0x7f060003;
         public static final int ov_username=0x7f060002;
         public static final int ov_username_label=0x7f060001;
-        public static final int recipient_number=0x7f060006;
-        public static final int reply_friend_send=0x7f060008;
+        public static final int recipient_number=0x7f060008;
+        public static final int reply_friend_send=0x7f06000a;
     }
     public static final class layout {
         public static final int calls=0x7f030000;
         public static final int login=0x7f030001;
         public static final int main=0x7f030002;
         public static final int messagings=0x7f030003;
-        public static final int new_message=0x7f030004;
-        public static final int outbound_calls=0x7f030005;
-        public static final int voicemails=0x7f030006;
+        public static final int new_call=0x7f030004;
+        public static final int new_message=0x7f030005;
+        public static final int outbound_calls=0x7f030006;
+        public static final int voicemails=0x7f030007;
     }
     public static final class menu {
-        public static final int new_message=0x7f050000;
+        public static final int new_call=0x7f050000;
+        public static final int new_message=0x7f050001;
     }
     public static final class string {
         public static final int app_name=0x7f040000;

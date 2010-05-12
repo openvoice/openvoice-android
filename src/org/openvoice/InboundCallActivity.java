@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -48,5 +49,22 @@ public class InboundCallActivity extends Activity {
 //        startActivity(newMessageIntent);
 //      }
 //    });
+  } 
+  
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    super.onCreateOptionsMenu(menu);
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.new_call, menu);
+    return true;
+  }
+  
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.new_call:
+        startActivity(new Intent(this, NewCallActivity.class));
+    }
+    return false;
   }  
 }
