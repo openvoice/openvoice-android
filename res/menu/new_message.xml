@@ -2,4 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:title="@string/new_thing" android:id="@+id/new_message"></item>
   <item android:title="@string/refresh" android:id="@+id/refresh"></item>
+  <item android:title="@string/login" android:id="@+id/login_item"></item>
 </menu>

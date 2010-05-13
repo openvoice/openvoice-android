@@ -10,6 +10,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,9 +21,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MessagingsActivity extends Activity {
 	
@@ -36,9 +41,13 @@ public class MessagingsActivity extends Activity {
   public static final String PREF_TOKEN = "Token";
 
   public static final String EXTRA_TO = "org.openvoice.extra.TO";
+ 
+  private static final int LOGIN_DIALOG = 0;
   
   private ListView mMessageListView;
   private String [] mMessages;
+  
+  private Dialog mLoginDialog;
   
   /** Called when the activity is first created. */
     @Override
@@ -50,8 +59,10 @@ public class MessagingsActivity extends Activity {
         
         mMessageListView = (ListView) findViewById(R.id.MessagesListView);
       
+        handleLogin();
+        
         locatePhoneNumber();
-        login();
+
         handleUserMessaging();
     }
     
@@ -66,14 +77,12 @@ public class MessagingsActivity extends Activity {
       mMessageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> arg0, View arg1, int position, long row_id) {
           Intent newMessageIntent = new Intent(getApplicationContext(), NewMessageActivity.class);
-//          TextView contactNameView = (TextView) ((RelativeLayout)arg1).findViewById(R.id.contact_name);
           String selected = condensedMessages[position];
           String to = selected.substring(0, selected.indexOf(":"));
           newMessageIntent.putExtra(EXTRA_TO, to);
           startActivity(newMessageIntent);
         }
       });
-      //mMessageListView.setTextFilterEnabled(true);      
     }
     
     private void handleUserMessaging() {
@@ -112,7 +121,6 @@ public class MessagingsActivity extends Activity {
       try {	
         String url = "/phone_numbers/locate_user";
         String params = "?format=json&phone_number=" + phoneNumber;
-//        URI uri = new URI(SERVER_URL + url + params);
         URI uri = new URI(SERVER_URL + url + params);
         HttpGet method = new HttpGet(uri);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
@@ -132,10 +140,16 @@ public class MessagingsActivity extends Activity {
       }
     }
 
-    private void login() {
+    private void handleLogin() {
+    	if(mPrefs.getString(PREF_TOKEN, "").equals("")) {
+    		showDialog(LOGIN_DIALOG);
+    	}
+    }
+    
+    private boolean login(String username, String password) {
     	DefaultHttpClient client = new DefaultHttpClient();
     	try {
-    		String url = "/user_sessions/create?user_session[login]=zlu&user_session[password]=flute&format=json";
+    		String url = "/user_sessions/create?user_session[login]=" + username +"&user_session[password]=" + password + "&format=json";
     		URI uri = new URI(SERVER_URL + url);
     		HttpPost method = new HttpPost(uri);
     		ResponseHandler<String>	responseHandler = new BasicResponseHandler();
@@ -145,11 +159,40 @@ public class MessagingsActivity extends Activity {
         SharedPreferences.Editor e = mPrefs.edit();
         e.putString(PREF_TOKEN, token);
         e.commit();
+        return true;
     	} catch(Exception e) {
     		Log.e(getClass().getName(), e.getMessage());
     	}
+  		return false;
     }
 
+    @Override
+    protected Dialog onCreateDialog(int id) {
+      switch (id) {
+        case LOGIN_DIALOG:
+          mLoginDialog = new Dialog(MessagingsActivity.this);
+          mLoginDialog.setTitle("Record your voicemail greeting");
+          mLoginDialog.setContentView(R.layout.login);
+          Button authenticateButton = (Button) mLoginDialog.findViewById(R.id.authenticate_button);
+          authenticateButton.setOnClickListener(mLoginListener);
+          return mLoginDialog;
+      }
+      return null;
+    }
+
+    private OnClickListener mLoginListener = new OnClickListener() {
+      public void onClick(View v) {    	
+      	String username = ((EditText)mLoginDialog.findViewById(R.id.ov_username)).getText().toString();
+      	String password= ((EditText)mLoginDialog.findViewById(R.id.ov_password)).getText().toString();
+        if(login(username, password)) {
+        	mLoginDialog.dismiss();
+        	Toast.makeText(getApplicationContext(), "Login suceeded", Toast.LENGTH_LONG).show();
+        } else {
+        	Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_LONG).show();        	
+        }
+      }
+    };
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
       super.onCreateOptionsMenu(menu);
@@ -165,6 +208,8 @@ public class MessagingsActivity extends Activity {
           startActivity(new Intent(this, NewMessageActivity.class));
         case R.id.refresh:
         	handleUserMessaging();
+        case R.id.login_item:
+        	showDialog(LOGIN_DIALOG);
       }
       return false;
     }    

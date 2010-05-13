@@ -20,10 +20,7 @@
         android:layout_marginRight="5dip"
         android:layout_below="@id/ov_username_label"
         android:scrollHorizontally="true"
-        android:autoText="false"
-        android:capitalize="none"
         android:gravity="fill_horizontal"
-        android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -34,11 +31,8 @@
         android:layout_marginRight="5dip"
         android:layout_below="@id/ov_username"
         android:scrollHorizontally="true"
-        android:autoText="false"
-        android:capitalize="none"
         android:gravity="fill_horizontal"
-        android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
-        android:textAppearance="?android:attr/textAppearanceMedium" />           
+        android:textAppearance="?android:attr/textAppearanceMedium" android:inputType="textPassword"/>           
            
     <Button android:id="@+id/authenticate_button" 
     android:layout_width="fill_parent"

@@ -8,4 +8,5 @@
 <string name="authenticate">authenticate</string>
 <string name="new_thing">New</string>
 <string name="refresh">Refresh</string>
+<string name="login">Login</string>
 </resources>

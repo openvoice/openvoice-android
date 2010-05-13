@@ -22,11 +22,12 @@ public class VoicemailsActivity extends ListActivity {
 	
 	private SharedPreferences mPrefs;
   private String [] mVoicemails;
+  private Context mContext;
   
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
-    Context context = getApplicationContext();
-    mPrefs = context.getSharedPreferences(MessagingsActivity.PREFERENCES_NAME, MODE_WORLD_READABLE);
+    mContext = getApplicationContext();
+    mPrefs = mContext.getSharedPreferences(MessagingsActivity.PREFERENCES_NAME, MODE_WORLD_READABLE);
     handleUserVoicemail();    
 	}
 
@@ -145,7 +146,8 @@ public class VoicemailsActivity extends ListActivity {
           
           Uri path = Uri.parse(mPath);
           try {
-      	    mp.setDataSource(mContext, path);
+          	mp.reset();
+      	    mp.setDataSource(getApplicationContext(), path);
       	    mp.prepare();
       	    mp.start();
           } catch (IllegalArgumentException e) {

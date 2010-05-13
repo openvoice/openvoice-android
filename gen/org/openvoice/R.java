@@ -28,6 +28,7 @@ public final class R {
         public static final int authenticate_button=0x7f060004;
         public static final int call_button=0x7f060007;
         public static final int callee_number=0x7f060006;
+        public static final int login_item=0x7f06000f;
         public static final int new_call=0x7f06000c;
         public static final int new_message=0x7f06000e;
         public static final int new_message_text=0x7f060009;
@@ -58,6 +59,7 @@ public final class R {
         public static final int authenticate=0x7f040005;
         public static final int call=0x7f040003;
         public static final int cancel=0x7f040001;
+        public static final int login=0x7f040008;
         public static final int new_thing=0x7f040006;
         public static final int refresh=0x7f040007;
         public static final int send=0x7f040002;
