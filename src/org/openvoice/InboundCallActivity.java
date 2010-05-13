@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -38,17 +40,19 @@ public class InboundCallActivity extends Activity {
   		condensedMessages[i] = m[0] + ": " + m[1];
   		i++;
   	}
-    mCallListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, condensedMessages));
-//    mCallListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//      public void onItemClick(AdapterView<?> arg0, View arg1, int position, long row_id) {
-//        Intent newMessageIntent = new Intent(getApplicationContext(), NewMessageActivity.class);
-////        TextView contactNameView = (TextView) ((RelativeLayout)arg1).findViewById(R.id.contact_name);
-//        String selected = condensedMessages[position];
-//        String to = selected.substring(0, selected.indexOf(":"));
-//        //newMessageIntent.putExtra(EXTRA_TO, to);
-//        startActivity(newMessageIntent);
-//      }
-//    });
+
+  	mCallListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, condensedMessages));
+    mCallListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      public void onItemClick(AdapterView<?> arg0, View arg1, int position, long row_id) {
+        Intent newCallIntent = new Intent(getApplicationContext(), NewCallActivity.class);
+        String selected = condensedMessages[position];
+        int firstColon = selected.indexOf(":");
+        int secondColon = selected.indexOf(":", firstColon+1);
+        String sipAddress = selected.substring(0, secondColon);
+        newCallIntent.putExtra(MessagingsActivity.EXTRA_TO, sipAddress);
+        startActivity(newCallIntent);
+      }
+    });
   } 
   
   @Override

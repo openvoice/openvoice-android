@@ -18,12 +18,10 @@ import android.util.Log;
 public class InboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
 
 	private org.openvoice.InboundCallActivity mMain;
-  private Context mContext;
   private SharedPreferences mPrefs;
   private String[][] mCalls;
   
   public InboundCallDownloadTask(Context context, org.openvoice.InboundCallActivity main) {
-    mContext = context;
     mMain = main;
     mPrefs = context.getSharedPreferences(org.openvoice.MessagingsActivity.PREFERENCES_NAME, Context.MODE_WORLD_READABLE);    
   }  
@@ -70,12 +68,7 @@ public class InboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
             Log.e(getClass().getName(), e.getMessage());
           }
         }
-//        String localStatus = StatusDBOpenHelper.getInstance(mContext).getCurrentStatus();
-//        boolean shouldSync = !localStatus.equals(stat[0][0]);
-//        if(shouldSync) {
-//          StatusDBOpenHelper.getInstance(mContext).insertTwitterStatus(stat[0][0], stat[0][1]);
-          return true;
-//        }        
+        return true;
       }
     } catch (Exception e) {
       //Log.e(getClass().getName(), e.getMessage());
