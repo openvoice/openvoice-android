@@ -68,6 +68,8 @@ public class InboundCallActivity extends Activity {
     switch (item.getItemId()) {
       case R.id.new_call:
         startActivity(new Intent(this, NewCallActivity.class));
+      case R.id.refresh:
+      	new InboundCallDownloadTask(getApplicationContext(), this).execute();
     }
     return false;
   }  
