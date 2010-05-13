@@ -163,6 +163,8 @@ public class MessagingsActivity extends Activity {
       switch (item.getItemId()) {
         case R.id.new_message:
           startActivity(new Intent(this, NewMessageActivity.class));
+        case R.id.refresh:
+        	handleUserMessaging();
       }
       return false;
     }    
