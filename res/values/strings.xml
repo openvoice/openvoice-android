@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="server_url_summary">Server URL where OpenVoice client points to</string>
+    <string name="server_url">Server URL</string>
 <string name="app_name">OpenVoice</string>
 <string name="cancel">Cancel</string>
 <string name="send">Send</string>
@@ -9,4 +11,5 @@
 <string name="new_thing">New</string>
 <string name="refresh">Refresh</string>
 <string name="login">Login</string>
+<string name="setting">Setting</string>
 </resources>

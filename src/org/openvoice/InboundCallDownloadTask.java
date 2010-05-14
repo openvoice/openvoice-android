@@ -20,10 +20,12 @@ public class InboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
 	private org.openvoice.InboundCallActivity mMain;
   private SharedPreferences mPrefs;
   private String[][] mCalls;
+  private Context mContext;
   
   public InboundCallDownloadTask(Context context, org.openvoice.InboundCallActivity main) {
     mMain = main;
-    mPrefs = context.getSharedPreferences(org.openvoice.MessagingsActivity.PREFERENCES_NAME, Context.MODE_WORLD_READABLE);    
+    mPrefs = context.getSharedPreferences(org.openvoice.MessagingsActivity.PREFERENCES_NAME, Context.MODE_WORLD_READABLE);
+    mContext = context;
   }  
 
   @Override
@@ -44,7 +46,7 @@ public class InboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
       String user_id = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_USER_ID, "");
       String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
       String addr = "/users/" + user_id + "/call_logs?format=json&token=" + token; 
-      URI uri = new URI(org.openvoice.MessagingsActivity.SERVER_URL + addr);
+      URI uri = new URI(SettingsActivity.getServerUrl(mContext) + addr);
       HttpGet method = new HttpGet(uri);
       ResponseHandler<String> responseHandler = new BasicResponseHandler();
       String responseBody = client.execute(method, responseHandler);

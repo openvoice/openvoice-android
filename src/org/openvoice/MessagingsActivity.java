@@ -32,7 +32,7 @@ import android.widget.Toast;
 public class MessagingsActivity extends Activity {
 	
 //	protected static String SERVER_URL = "http://web1.tunnlr.com:10790";
-	protected static String SERVER_URL = "http://tropovoice.heroku.com";
+//	protected static String SERVER_URL = "http://tropovoice.heroku.com";
 	
   private SharedPreferences mPrefs;
   public static final String PREFERENCES_NAME = "OpenVoice";
@@ -121,7 +121,7 @@ public class MessagingsActivity extends Activity {
       try {	
         String url = "/phone_numbers/locate_user";
         String params = "?format=json&phone_number=" + phoneNumber;
-        URI uri = new URI(SERVER_URL + url + params);
+        URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + url + params);
         HttpGet method = new HttpGet(uri);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = client.execute(method, responseHandler);
@@ -150,7 +150,7 @@ public class MessagingsActivity extends Activity {
     	DefaultHttpClient client = new DefaultHttpClient();
     	try {
     		String url = "/user_sessions/create?user_session[login]=" + username +"&user_session[password]=" + password + "&format=json";
-    		URI uri = new URI(SERVER_URL + url);
+    		URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + url);
     		HttpPost method = new HttpPost(uri);
     		ResponseHandler<String>	responseHandler = new BasicResponseHandler();
     		String responseBody = client.execute(method, responseHandler);
@@ -206,10 +206,16 @@ public class MessagingsActivity extends Activity {
       switch (item.getItemId()) {
         case R.id.new_message:
           startActivity(new Intent(this, NewMessageActivity.class));
+          return true;
         case R.id.refresh:
         	handleUserMessaging();
+        	return true;
         case R.id.login_item:
         	showDialog(LOGIN_DIALOG);
+        	return true;
+        case R.id.setting_item:
+          startActivity(new Intent(this, SettingsActivity.class));
+          return true;
       }
       return false;
     }    

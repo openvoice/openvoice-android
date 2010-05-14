@@ -98,7 +98,7 @@ public class NewMessageActivity extends Activity {
       try {
       	String recipientNumber = mRecipientView.getText().toString();
         String params = "&format=json&messaging[user_id]=" + mUserID + "&messaging[text]=" + Uri.encode(text) + "&token=" + token + "&messaging[to]=" + recipientNumber;
-        URI uri = new URI(MessagingsActivity.SERVER_URL + "/messagings/create?" + params);
+        URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + "/messagings/create?" + params);
         HttpPost method = new HttpPost(uri);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = client.execute(method, responseHandler);
@@ -125,7 +125,7 @@ public class NewMessageActivity extends Activity {
       try {
       	String recipientNumber = mRecipientView.getText().toString();
         String params = "&format=json&user_id=" + mUserID + "&token=" + token + "&voice_call[to]=" + recipientNumber;
-        URI uri = new URI(MessagingsActivity.SERVER_URL + "/voice_calls/create?" + params);
+        URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + "/voice_calls/create?" + params);
         HttpPost method = new HttpPost(uri);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = client.execute(method, responseHandler);

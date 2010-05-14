@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+  <EditTextPreference android:key="server"
+    android:summary="@string/server_url_summary"
+    android:title="@string/server_url" android:defaultValue="http://tropovoice.heroku.com"/>
+</PreferenceScreen> 

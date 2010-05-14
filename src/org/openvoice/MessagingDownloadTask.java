@@ -46,7 +46,7 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
       String user_id = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_USER_ID, "");
       String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
       String addr = "/users/" + user_id + "/messagings?format=json&token=" + token; 
-      URI uri = new URI(org.openvoice.MessagingsActivity.SERVER_URL + addr);
+      URI uri = new URI(SettingsActivity.getServerUrl(mContext) + addr);
       HttpGet method = new HttpGet(uri);
       ResponseHandler<String> responseHandler = new BasicResponseHandler();
       String responseBody = client.execute(method, responseHandler);

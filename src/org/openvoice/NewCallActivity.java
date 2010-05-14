@@ -72,7 +72,7 @@ public class NewCallActivity extends Activity {
       try {
       	String recipientNumber = mRecipientView.getText().toString();
         String params = "&format=json&user_id=" + mUserID + "&token=" + token + "&voice_call[to]=" + recipientNumber;
-        URI uri = new URI(MessagingsActivity.SERVER_URL + "/voice_calls/create?" + params);
+        URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + "/voice_calls/create?" + params);
         HttpPost method = new HttpPost(uri);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = client.execute(method, responseHandler);
