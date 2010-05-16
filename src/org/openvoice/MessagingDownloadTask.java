@@ -24,7 +24,6 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
 	private org.openvoice.MessagingsActivity mMain;
   private Context mContext;
   private SharedPreferences mPrefs;
-  private String[][] mMessages;
   private List<Map<String, String>> mMessageData;
   
   public MessagingDownloadTask(Context context, org.openvoice.MessagingsActivity main) {
@@ -59,7 +58,6 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
       if( responseBody != null && responseBody != "") {
         try {
           JSONArray jsons = new JSONArray(responseBody);
-          mMessages = new String[jsons.length()][4];
           for(int i=0; i<jsons.length(); i++) {
             JSONObject json = jsons.getJSONObject(i);            
             JSONObject message = json.getJSONObject("messaging");
@@ -70,7 +68,6 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
             JSONObject json = new JSONObject(responseBody);
             JSONArray ar = json.toJSONArray(json.names());
             JSONObject elem = ar.getJSONObject(0);
-            mMessages = new String[1][4];
             extract_status(0, elem);
           } catch(JSONException e) {
             Log.e(getClass().getName(), e.getMessage());
@@ -88,10 +85,6 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
 
   private void extract_status(int i, JSONObject elem)
   throws JSONException {
-  	mMessages[i][0] = elem.getString("from");
-  	mMessages[i][1] = elem.getString("to");
-  	mMessages[i][2] = elem.getString("created_at");
-    mMessages[i][3] = elem.getString("text");
     HashMap<String, String> md = new HashMap<String, String>();
     md.put("caller_id", elem.getString("from"));
     md.put("time", elem.getString("created_at"));

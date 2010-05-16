@@ -25,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -48,7 +47,6 @@ public class MessagingsActivity extends Activity {
   private static final int LOGIN_DIALOG = 0;
   
   private ListView mMessageListView;
-  private String [] mMessages;
   
   private Dialog mLoginDialog;
   
@@ -65,36 +63,25 @@ public class MessagingsActivity extends Activity {
         handleUserMessaging();
     }
     
-    void showMessages2(String[][] messages) {
-    	final String [] condensedMessages = new String[messages.length];
-    	int i = 0;
-    	for(String[] m : messages) {
-    		condensedMessages[i] = m[0] + ": " + m[1];
-    		i++;
-    	}
-      mMessageListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, condensedMessages));
-      mMessageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long row_id) {
-          Intent newMessageIntent = new Intent(getApplicationContext(), NewMessageActivity.class);
-          String selected = condensedMessages[position];
-          String to = selected.substring(0, selected.indexOf(":"));
-          newMessageIntent.putExtra(EXTRA_TO, to);
-          startActivity(newMessageIntent);
-        }
-      });
-    }
-    
     /**
      * builds adapter that binds message data with message_row and the list view of messages.
      * each row of message displays caller_id, time, and message body.
      * 
      * @param messages
      */
-    void showMessages(List<Map<String, String>> messageData) {
+    void showMessages(final List<Map<String, String>> messageData) {
     	String[] from = {"caller_id", "time", "message_body"};
     	// to array contains ids from message_row.xml
     	int[] to= {R.id.caller_id, R.id.message_datetime, R.id.message_body};
       mMessageListView.setAdapter(new SimpleAdapter(this, messageData, R.layout.message_row, from, to));
+      mMessageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long row_id) {
+          Intent newMessageIntent = new Intent(getApplicationContext(), NewMessageActivity.class);
+          String to = ((Map<String, String>)messageData.get(position)).get("caller_id").toString();
+          newMessageIntent.putExtra(EXTRA_TO, to);
+          startActivity(newMessageIntent);
+        }
+      });
     }
     
     private void handleUserMessaging() {
