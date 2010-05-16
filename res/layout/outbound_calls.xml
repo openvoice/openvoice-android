@@ -6,7 +6,7 @@
     android:layout_height="fill_parent"
     >
 
-<ListView android:id="@+id/CallListView" 
+<ListView android:id="@+id/OutboundCallListView" 
           android:layout_width="wrap_content" 
           android:layout_height="wrap_content">
 </ListView>

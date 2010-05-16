@@ -1,6 +1,10 @@
 package org.openvoice;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -20,12 +24,13 @@ public class OutboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
 	private org.openvoice.OutboundCallActivity mMain;
   private Context mContext;
   private SharedPreferences mPrefs;
-  private String[][] mCalls;
+  private List<Map<String, String>> mCallData;
   
   public OutboundCallDownloadTask(Context context, org.openvoice.OutboundCallActivity main) {
     mContext = context;
     mMain = main;
     mPrefs = context.getSharedPreferences(org.openvoice.MessagingsActivity.PREFERENCES_NAME, Context.MODE_WORLD_READABLE);    
+    mCallData = new ArrayList<Map<String, String>>();
   }  
 
   @Override
@@ -36,7 +41,7 @@ public class OutboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
   @Override
   protected void onPostExecute(Boolean result) {
     if(result) {
-      mMain.showCalls(mCalls);
+      mMain.showCalls(mCallData);
     }
   }
 
@@ -53,7 +58,6 @@ public class OutboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
       if( responseBody != null && responseBody != "") {
         try {
           JSONArray jsons = new JSONArray(responseBody);
-          mCalls = new String[jsons.length()][2];
           for(int i=0; i<jsons.length(); i++) {
             JSONObject json = jsons.getJSONObject(i);            
             JSONObject message = json.getJSONObject("voice_call");
@@ -64,7 +68,6 @@ public class OutboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
             JSONObject json = new JSONObject(responseBody);
             JSONArray ar = json.toJSONArray(json.names());
             JSONObject elem = ar.getJSONObject(0);
-            mCalls = new String[1][2];
             extract_status(0, elem);
           } catch(JSONException e) {
             Log.e(getClass().getName(), e.getMessage());
@@ -82,7 +85,11 @@ public class OutboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
 
   private void extract_status(int i, JSONObject elem)
   throws JSONException {
-    mCalls[i][0] = elem.getString("to");
-    mCalls[i][1] = elem.getString("created_at");
+    HashMap<String, String> md = new HashMap<String, String>();
+    String to = elem.getString("to");
+  	md.put("caller_id", to);
+    md.put("caller_name", ContactManager.getInstance(mContext).getContactNameByPhoneNumber(to));
+    md.put("time", elem.getString("created_at"));
+    mCallData.add(md);
   }
 }
