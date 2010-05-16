@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/voicemail_row_layout"
+  android:layout_width="fill_parent" 
+  android:layout_height="?android:attr/listPreferredItemHeight"
+  android:padding="1dip" > 
+  
+	<!-- ImageView android:id="@+id/contact_icon"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true" 
+		android:layout_alignParentBottom="true"
+		android:layout_marginRight="6dip" / -->
+
+  <TextView android:id="@+id/vm_direction"
+    android:layout_height="wrap_content" 
+    android:layout_width="wrap_content"
+    android:layout_alignParentLeft="true" 
+    android:textSize="14sp" />
+		
+	<TextView android:id="@+id/vm_caller_name"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/vm_direction"
+		android:layout_alignParentTop="true"
+		android:gravity="center_vertical" 
+		android:textSize="14sp" />
+
+	<TextView android:id="@+id/vm_datetime"
+		android:layout_height="wrap_content" 
+		android:layout_width="wrap_content"
+		android:layout_toRightOf="@id/vm_caller_name"
+		android:layout_alignParentRight="true" 
+    android:layout_alignBaseline="@id/vm_caller_name"
+    android:gravity="right"
+    android:paddingRight="5dip"    
+		android:textSize="12sp" />
+
+  <TextView android:id="@+id/vm_caller_id"
+    android:layout_alignParentLeft="true"
+    android:layout_height="wrap_content" 
+    android:layout_width="fill_parent"
+    android:layout_below="@id/vm_direction"
+    android:textSize="12sp" />
+
+  <TextView android:id="@+id/transcription" 
+    android:layout_height="20sp" 
+    android:layout_width="fill_parent"
+    android:layout_alignParentBottom="true"
+    android:layout_below="@id/vm_caller_id"
+    android:textSize="12sp"
+    android:textStyle="bold" />
+
+</RelativeLayout> 
