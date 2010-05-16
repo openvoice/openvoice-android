@@ -1,6 +1,10 @@
 package org.openvoice;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -19,13 +23,14 @@ public class InboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
 
 	private org.openvoice.InboundCallActivity mMain;
   private SharedPreferences mPrefs;
-  private String[][] mCalls;
   private Context mContext;
+  private List<Map<String, String>> mCallData;
   
   public InboundCallDownloadTask(Context context, org.openvoice.InboundCallActivity main) {
     mMain = main;
     mPrefs = context.getSharedPreferences(org.openvoice.MessagingsActivity.PREFERENCES_NAME, Context.MODE_WORLD_READABLE);
     mContext = context;
+    mCallData = new ArrayList<Map<String, String>>();
   }  
 
   @Override
@@ -36,7 +41,7 @@ public class InboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
   @Override
   protected void onPostExecute(Boolean result) {
     if(result) {
-      mMain.showCalls(mCalls);
+      mMain.showCalls(mCallData);
     }
   }
 
@@ -53,24 +58,23 @@ public class InboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
       if( responseBody != null && responseBody != "") {
         try {
           JSONArray jsons = new JSONArray(responseBody);
-          mCalls = new String[jsons.length()][2];
           for(int i=0; i<jsons.length(); i++) {
             JSONObject json = jsons.getJSONObject(i);            
             JSONObject message = json.getJSONObject("call_log");
             extract_status(i, message);
           }
+          return true;
         } catch(JSONException jsone) {
           try {
             JSONObject json = new JSONObject(responseBody);
             JSONArray ar = json.toJSONArray(json.names());
             JSONObject elem = ar.getJSONObject(0);
-            mCalls = new String[1][2];
             extract_status(0, elem);
+            return true;
           } catch(JSONException e) {
             Log.e(getClass().getName(), e.getMessage());
           }
         }
-        return true;
       }
     } catch (Exception e) {
       //Log.e(getClass().getName(), e.getMessage());
@@ -82,7 +86,11 @@ public class InboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
 
   private void extract_status(int i, JSONObject elem)
   throws JSONException {
-    mCalls[i][0] = elem.getString("from");
-    mCalls[i][1] = elem.getString("created_at");
+    HashMap<String, String> md = new HashMap<String, String>();
+    String from = elem.getString("from");
+  	md.put("caller_id", from);
+    md.put("caller_name", ContactManager.getInstance(mContext).getContactNameByPhoneNumber(from));
+    md.put("time", elem.getString("created_at"));
+    mCallData.add(md);
   }
 }

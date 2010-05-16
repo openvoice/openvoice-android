@@ -1,5 +1,8 @@
 package org.openvoice;
 
+import java.util.List;
+import java.util.Map;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,15 +13,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 public class InboundCallActivity extends Activity {
 
   private SharedPreferences mPrefs;
-
   private ListView mCallListView;
-  private String [] mCalls;
 
   /** Called when the activity is first created. */
   @Override
@@ -26,34 +27,29 @@ public class InboundCallActivity extends Activity {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.calls);
       Context context = getApplicationContext();
-      mPrefs = context.getSharedPreferences(MessagingsActivity.PREFERENCES_NAME, MODE_WORLD_READABLE);
-      
-      mCallListView = (ListView) findViewById(R.id.CallListView);
-      
+      mPrefs = context.getSharedPreferences(MessagingsActivity.PREFERENCES_NAME, MODE_WORLD_READABLE);    
+      mCallListView = (ListView) findViewById(R.id.CallListView);      
       new InboundCallDownloadTask(getApplicationContext(), this).execute();    
   }
 	
-  void showCalls(String[][] calls) {
-  	final String [] condensedMessages = new String[calls.length];
-  	int i = 0;
-  	for(String[] m : calls) {
-  		condensedMessages[i] = m[0] + ": " + m[1];
-  		i++;
-  	}
-
-  	mCallListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, condensedMessages));
+  /**
+   * builds adapter that binds inbound calls with voice_row.
+   * 
+   * @param calls
+   */
+  void showCalls(final List<Map<String, String>> calls) {
+  	String[] from = {"caller_name", "caller_id", "time"};
+  	int[] to= {R.id.inbound_caller_name, R.id.inbound_caller_id, R.id.inbound_datetime};
+  	mCallListView.setAdapter(new SimpleAdapter(this, calls, R.layout.voice_row, from, to));
     mCallListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       public void onItemClick(AdapterView<?> arg0, View arg1, int position, long row_id) {
-        Intent newCallIntent = new Intent(getApplicationContext(), NewCallActivity.class);
-        String selected = condensedMessages[position];
-        int firstColon = selected.indexOf(":");
-        int secondColon = selected.indexOf(":", firstColon+1);
-        String sipAddress = selected.substring(0, secondColon);
-        newCallIntent.putExtra(MessagingsActivity.EXTRA_TO, sipAddress);
-        startActivity(newCallIntent);
+        Intent newMessageIntent = new Intent(getApplicationContext(), NewMessageActivity.class);
+        String to = ((Map<String, String>)calls.get(position)).get("caller_id").toString();
+        newMessageIntent.putExtra(MessagingsActivity.EXTRA_TO, to);
+        startActivity(newMessageIntent);
       }
     });
-  } 
+  }
   
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
