@@ -86,7 +86,11 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
   private void extract_status(int i, JSONObject elem)
   throws JSONException {
     HashMap<String, String> md = new HashMap<String, String>();
-    md.put("caller_id", elem.getString("from"));
+    if(elem.getBoolean("outgoing")) {
+    	md.put("caller_id", elem.getString("to"));
+    } else {
+    	md.put("caller_id", elem.getString("from"));
+    }
     md.put("time", elem.getString("created_at"));
     md.put("message_body", elem.getString("text"));
     mMessageData.add(md);
