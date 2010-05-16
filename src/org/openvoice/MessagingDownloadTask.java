@@ -1,6 +1,10 @@
 package org.openvoice;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -21,11 +25,13 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
   private Context mContext;
   private SharedPreferences mPrefs;
   private String[][] mMessages;
+  private List<Map<String, String>> mMessageData;
   
   public MessagingDownloadTask(Context context, org.openvoice.MessagingsActivity main) {
     mContext = context;
     mMain = main;
     mPrefs = context.getSharedPreferences(org.openvoice.MessagingsActivity.PREFERENCES_NAME, Context.MODE_WORLD_READABLE);    
+    mMessageData = new ArrayList<Map<String, String>>();
   }  
 
   @Override
@@ -36,7 +42,7 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
   @Override
   protected void onPostExecute(Boolean result) {
     if(result) {
-      mMain.showMessages(mMessages);
+      mMain.showMessages(mMessageData);
     }
   }
 
@@ -53,7 +59,7 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
       if( responseBody != null && responseBody != "") {
         try {
           JSONArray jsons = new JSONArray(responseBody);
-          mMessages = new String[jsons.length()][2];
+          mMessages = new String[jsons.length()][4];
           for(int i=0; i<jsons.length(); i++) {
             JSONObject json = jsons.getJSONObject(i);            
             JSONObject message = json.getJSONObject("messaging");
@@ -64,18 +70,13 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
             JSONObject json = new JSONObject(responseBody);
             JSONArray ar = json.toJSONArray(json.names());
             JSONObject elem = ar.getJSONObject(0);
-            mMessages = new String[1][2];
+            mMessages = new String[1][4];
             extract_status(0, elem);
           } catch(JSONException e) {
             Log.e(getClass().getName(), e.getMessage());
           }
         }
-//        String localStatus = StatusDBOpenHelper.getInstance(mContext).getCurrentStatus();
-//        boolean shouldSync = !localStatus.equals(stat[0][0]);
-//        if(shouldSync) {
-//          StatusDBOpenHelper.getInstance(mContext).insertTwitterStatus(stat[0][0], stat[0][1]);
-          return true;
-//        }        
+        return true;
       }
     } catch (Exception e) {
       //Log.e(getClass().getName(), e.getMessage());
@@ -87,7 +88,14 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
 
   private void extract_status(int i, JSONObject elem)
   throws JSONException {
-    mMessages[i][0] = elem.getString("from");
-    mMessages[i][1] = elem.getString("text");
+  	mMessages[i][0] = elem.getString("from");
+  	mMessages[i][1] = elem.getString("to");
+  	mMessages[i][2] = elem.getString("created_at");
+    mMessages[i][3] = elem.getString("text");
+    HashMap<String, String> md = new HashMap<String, String>();
+    md.put("caller_id", elem.getString("from"));
+    md.put("time", elem.getString("created_at"));
+    md.put("message_body", elem.getString("text"));
+    mMessageData.add(md);
   }
 }

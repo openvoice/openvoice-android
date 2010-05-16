@@ -1,6 +1,8 @@
 package org.openvoice;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -27,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 public class MessagingsActivity extends Activity {
@@ -55,18 +58,14 @@ public class MessagingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messagings);
         Context context = getApplicationContext();
-        mPrefs = context.getSharedPreferences(PREFERENCES_NAME, MODE_WORLD_READABLE);
-        
-        mMessageListView = (ListView) findViewById(R.id.MessagesListView);
-      
-        handleLogin();
-        
+        mPrefs = context.getSharedPreferences(PREFERENCES_NAME, MODE_WORLD_READABLE);        
+        mMessageListView = (ListView) findViewById(R.id.MessagesListView);      
+        handleLogin();        
         locatePhoneNumber();
-
         handleUserMessaging();
     }
     
-    void showMessages(String[][] messages) {
+    void showMessages2(String[][] messages) {
     	final String [] condensedMessages = new String[messages.length];
     	int i = 0;
     	for(String[] m : messages) {
@@ -83,6 +82,19 @@ public class MessagingsActivity extends Activity {
           startActivity(newMessageIntent);
         }
       });
+    }
+    
+    /**
+     * builds adapter that binds message data with message_row and the list view of messages.
+     * each row of message displays caller_id, time, and message body.
+     * 
+     * @param messages
+     */
+    void showMessages(List<Map<String, String>> messageData) {
+    	String[] from = {"caller_id", "time", "message_body"};
+    	// to array contains ids from message_row.xml
+    	int[] to= {R.id.caller_id, R.id.message_datetime, R.id.message_body};
+      mMessageListView.setAdapter(new SimpleAdapter(this, messageData, R.layout.message_row, from, to));
     }
     
     private void handleUserMessaging() {
@@ -171,7 +183,7 @@ public class MessagingsActivity extends Activity {
       switch (id) {
         case LOGIN_DIALOG:
           mLoginDialog = new Dialog(MessagingsActivity.this);
-          mLoginDialog.setTitle("Record your voicemail greeting");
+          mLoginDialog.setTitle("Login");
           mLoginDialog.setContentView(R.layout.login);
           Button authenticateButton = (Button) mLoginDialog.findViewById(R.id.authenticate_button);
           authenticateButton.setOnClickListener(mLoginListener);
