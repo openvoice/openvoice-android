@@ -88,8 +88,10 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
     HashMap<String, String> md = new HashMap<String, String>();
     if(elem.getBoolean("outgoing")) {
     	md.put("caller_id", elem.getString("to"));
+    	md.put("direction", "To: ");
     } else {
     	md.put("caller_id", elem.getString("from"));
+    	md.put("direction", "From: ");
     }
     md.put("caller_name", ContactManager.getInstance(mContext).getContactNameByPhoneNumber(md.get("caller_id").toString()));
     md.put("time", elem.getString("created_at"));
