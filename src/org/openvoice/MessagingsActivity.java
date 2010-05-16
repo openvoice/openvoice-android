@@ -70,9 +70,9 @@ public class MessagingsActivity extends Activity {
      * @param messages
      */
     void showMessages(final List<Map<String, String>> messageData) {
-    	String[] from = {"caller_id", "time", "message_body"};
+    	String[] from = {"caller_id", "time", "caller_name", "message_body"};
     	// to array contains ids from message_row.xml
-    	int[] to= {R.id.caller_id, R.id.message_datetime, R.id.message_body};
+    	int[] to= {R.id.caller_id, R.id.message_datetime, R.id.caller_name, R.id.message_body};
       mMessageListView.setAdapter(new SimpleAdapter(this, messageData, R.layout.message_row, from, to));
       mMessageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> arg0, View arg1, int position, long row_id) {

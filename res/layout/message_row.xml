@@ -32,11 +32,18 @@
     android:paddingRight="5dip"    
 		android:textSize="12sp" />
 
+  <TextView android:id="@+id/caller_name"
+    android:layout_height="wrap_content" 
+    android:layout_width="fill_parent"
+    android:layout_below="@id/caller_id"
+    android:layout_alignParentLeft="true" 
+    android:textSize="12sp" />
+
   <TextView android:id="@+id/message_body" 
     android:layout_height="20sp" 
     android:layout_width="fill_parent"
     android:layout_alignParentBottom="true"
-    android:layout_below="@id/caller_id"
+    android:layout_below="@id/caller_name"
     android:textSize="12sp"
     android:textStyle="bold" />
 

@@ -91,6 +91,7 @@ public class MessagingDownloadTask extends AsyncTask<String, Void, Boolean> {
     } else {
     	md.put("caller_id", elem.getString("from"));
     }
+    md.put("caller_name", ContactManager.getInstance(mContext).getContactNameByPhoneNumber(md.get("caller_id").toString()));
     md.put("time", elem.getString("created_at"));
     md.put("message_body", elem.getString("text"));
     mMessageData.add(md);
