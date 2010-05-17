@@ -172,13 +172,12 @@ public class NewMessageActivity extends Activity {
       DefaultHttpClient client = new DefaultHttpClient();
       String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
       try {
-      	String recipientNumber = mRecipientView.getText().toString();
+      	String recipientNumber = Uri.encode(mRecipientView.getText().toString());
         String params = "&format=json&messaging[user_id]=" + mUserID + "&messaging[text]=" + Uri.encode(text) + "&token=" + token + "&messaging[to]=" + recipientNumber;
         URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + "/messagings/create?" + params);
         HttpPost method = new HttpPost(uri);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = client.execute(method, responseHandler);
-//        System.out.println(responseBody);
       } catch (Exception e) {
         Log.e(getClass().getName(), e.getMessage() == null ? "Error sending message" : e.getMessage());
       } finally {
@@ -199,7 +198,7 @@ public class NewMessageActivity extends Activity {
       DefaultHttpClient client = new DefaultHttpClient();
       String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
       try {
-      	String recipientNumber = mRecipientView.getText().toString();
+      	String recipientNumber = Uri.encode(mRecipientView.getText().toString());
         String params = "&format=json&user_id=" + mUserID + "&token=" + token + "&voice_call[to]=" + recipientNumber;
         URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + "/voice_calls/create?" + params);
         HttpPost method = new HttpPost(uri);
