@@ -20,11 +20,20 @@
             android:layout_marginRight="5dip"
             android:scrollHorizontally="false"
             android:gravity="fill_horizontal"
-            android:textAppearance="?android:attr/textAppearanceMedium" android:inputType="textAutoCorrect|textMultiLine|textShortMessage"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" 
+            android:inputType="textAutoCorrect|textMultiLine|textShortMessage"/>
+
+  <Button
+      android:id="@+id/pick_contact_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/new_message_text"
+      android:text="@string/contacts"/>
 
   <Button android:id="@+id/reply_friend_send"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_toRightOf="@id/pick_contact_button"
           android:layout_below="@id/new_message_text" 
           android:text="@string/send"/>
 

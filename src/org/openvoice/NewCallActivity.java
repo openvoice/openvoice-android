@@ -113,9 +113,6 @@ public class NewCallActivity extends Activity {
    * Displays contact information: name and phone number.
    */
   protected void bindView(ContactInfo contactInfo) {
-//      TextView displayNameView = (TextView) findViewById(R.id.display_name_text_view);
-//      displayNameView.setText(contactInfo.getDisplayName());
-
       TextView phoneNumberView = (TextView) findViewById(R.id.callee_number);
       phoneNumberView.setText(contactInfo.getPhoneNumber());
   }
