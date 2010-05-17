@@ -10,10 +10,21 @@
     android:layout_marginRight="5dip"
     android:hint="To"
     android:textSize="14sp"/>
-
+        
   <Button android:id="@+id/call_button"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_below="@id/callee_number"
-          android:text="@string/call"/>   
+          android:text="@string/call" 
+          android:layout_alignParentRight="true"/>
+
+  <Button
+      android:id="@+id/pick_contact_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/callee_number"
+      android:layout_toLeftOf="@id/call_button"
+      android:layout_alignBaseline="@id/call_button"
+      android:text="@string/contacts"/>
+             
 </RelativeLayout>
