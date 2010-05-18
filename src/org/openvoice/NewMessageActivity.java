@@ -1,6 +1,7 @@
 package org.openvoice;
 
 import java.net.URI;
+import java.util.regex.Pattern;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
@@ -172,7 +173,12 @@ public class NewMessageActivity extends Activity {
       DefaultHttpClient client = new DefaultHttpClient();
       String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
       try {
-      	String recipientNumber = Uri.encode(mRecipientView.getText().toString());
+      	String recipientNumber = mRecipientView.getText().toString();
+      	recipientNumber = recipientNumber.replaceAll(Pattern.compile("\\D").pattern(), "");
+      	// TODO temporary hack will only work for usa number
+      	if(recipientNumber.length() == 10) {
+      		recipientNumber = "1" + recipientNumber;
+      	}
         String params = "&format=json&messaging[user_id]=" + mUserID + "&messaging[text]=" + Uri.encode(text) + "&token=" + token + "&messaging[to]=" + recipientNumber;
         URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + "/messagings/create?" + params);
         HttpPost method = new HttpPost(uri);
