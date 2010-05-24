@@ -32,13 +32,11 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 public class MessagingsActivity extends Activity {
-	
-//	protected static String SERVER_URL = "http://web1.tunnlr.com:10790";
-//	protected static String SERVER_URL = "http://tropovoice.heroku.com";
-	
-	  private SharedPreferences mPrefs;
+
+  private SharedPreferences mPrefs;
   public static final String PREFERENCES_NAME = "OpenVoice";
   public static final String PREF_USER_ID = "UserID";
+  public static final String PREF_USER_LOGIN = "UserLogin";
   public static final String PREF_PHONE_NUMBER = "MyPhoneNumber";
   public static final String PREF_TOKEN = "Token";
 
@@ -46,8 +44,7 @@ public class MessagingsActivity extends Activity {
  
   private static final int LOGIN_DIALOG = 0;
   
-  private ListView mMessageListView;
-  
+  private ListView mMessageListView;  
   private Dialog mLoginDialog;
   
   /** Called when the activity is first created. */
@@ -58,9 +55,7 @@ public class MessagingsActivity extends Activity {
         Context context = getApplicationContext();
         mPrefs = context.getSharedPreferences(PREFERENCES_NAME, MODE_WORLD_READABLE);        
         mMessageListView = (ListView) findViewById(R.id.MessagesListView);      
-        handleLogin();        
-        locatePhoneNumber();
-        handleUserMessaging();
+        handleLogin();       
     }
     
     /**
@@ -88,38 +83,58 @@ public class MessagingsActivity extends Activity {
       new MessagingDownloadTask(getApplicationContext(), this).execute();	  
     }
 
-    private void locatePhoneNumber() {
-    	// return immediately if we have a saved user_id
-    	if(mPrefs.getString(PREF_USER_ID, "").length() > 0) {
-    		return;
+    /**
+     * displays the login dialog if to persistence token is saved.
+     */
+    private void handleLogin() {
+    	if(mPrefs.getString(PREF_TOKEN, "").equals("")) {
+    		showDialog(LOGIN_DIALOG);
+    	} else {
+      	handleUserMessaging();
     	}
-    	
-    	// if we have a saved phone number but not user_id, then retrieve the user_id from server
-    	String phoneNumber = mPrefs.getString(PREF_PHONE_NUMBER, ""); 
-    	if(phoneNumber.length() > 0) {
-    		locateCurrentUser(phoneNumber);
-    		return;
-    	}
-    	
-    	// if still no luck then we try to get phonenumber from api call
-    	TelephonyManager tm = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-  	  phoneNumber = tm.getLine1Number(); 	
-//  	  if(phoneNumber == null || phoneNumber.equals("")) {
-//  	  	// if we can't get the phone number from api, such as for brand new t-mobile sim card, we have to ask user to input it
-//      	Toast.makeText(getApplicationContext(), "Unable to retrieve phone number, maybe your have a new service or SIM card.  Please input your number.", Toast.LENGTH_LONG).show();
-//  			Intent intent = new Intent(Main.this, PhoneNumberActivity.class);
-//  			startActivityForResult(intent, MY_PHONE_NUMBER_CODE);      	  	
-//  	  } else {
-  	  	// if we can get the phone number from api, then go to server to get user_id
-  	  	locateCurrentUser(phoneNumber);
-//  	  }
     }
-
-    private void locateCurrentUser(String phoneNumber) {    
+    
+    /**
+     * upon successful login, saves persistence token and user login so that we don't prompt user to login in the future
+     * @param username
+     * @param password
+     * @return
+     */
+    private boolean login(String username, String password) {
+    	DefaultHttpClient client = new DefaultHttpClient();
+    	try {
+    		String url = "/user_sessions/create?user_session[login]=" + username +"&user_session[password]=" + password + "&format=json";
+    		URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + url);
+    		HttpPost method = new HttpPost(uri);
+    		ResponseHandler<String>	responseHandler = new BasicResponseHandler();
+    		String responseBody = client.execute(method, responseHandler);
+    		JSONObject json = new JSONObject(responseBody);
+        JSONObject userJson = json.getJSONObject("record").getJSONObject("user");
+        SharedPreferences.Editor e = mPrefs.edit();
+        e.putString(PREF_TOKEN, userJson.getString("persistence_token"));
+        e.putString(PREF_USER_LOGIN, userJson.getString("login"));
+        e.commit();
+        
+        registerPhoneNumber(userJson.getString("login"));
+        
+        return true;
+    	} catch(Exception e) {
+    		Log.e(getClass().getName(), e.getMessage());
+    	}
+  		return false;
+    }
+    
+    /**
+     * registers phone number to the user account if needed.
+     * @return
+     */
+    private boolean registerPhoneNumber(String user_login) {
+    	TelephonyManager tm = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+  	  String phoneNumber = tm.getLine1Number(); 
       DefaultHttpClient client = new DefaultHttpClient();
       try {	
-        String url = "/phone_numbers/locate_user";
-        String params = "?format=json&phone_number=" + phoneNumber;
+        String url = "/users/register_phone";
+        String params = "?format=json&phone_number=" + phoneNumber + "&user_login=" + user_login;
         URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + url + params);
         HttpGet method = new HttpGet(uri);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
@@ -132,37 +147,16 @@ public class MessagingsActivity extends Activity {
           e.putString(PREF_PHONE_NUMBER, phoneNumber);
           e.commit();
         }
+        
+      	handleUserMessaging();
+      	
+        return true;
       } catch (Exception e) {
         Log.e(getClass().getName(), e.getMessage());
       } finally {	
         // TODO fill in blanks 
-      }
-    }
-
-    private void handleLogin() {
-    	if(mPrefs.getString(PREF_TOKEN, "").equals("")) {
-    		showDialog(LOGIN_DIALOG);
-    	}
-    }
-    
-    private boolean login(String username, String password) {
-    	DefaultHttpClient client = new DefaultHttpClient();
-    	try {
-    		String url = "/user_sessions/create?user_session[login]=" + username +"&user_session[password]=" + password + "&format=json";
-    		URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + url);
-    		HttpPost method = new HttpPost(uri);
-    		ResponseHandler<String>	responseHandler = new BasicResponseHandler();
-    		String responseBody = client.execute(method, responseHandler);
-    		JSONObject json = new JSONObject(responseBody);
-        String token = json.getJSONObject("record").getJSONObject("user").getString("persistence_token");
-        SharedPreferences.Editor e = mPrefs.edit();
-        e.putString(PREF_TOKEN, token);
-        e.commit();
-        return true;
-    	} catch(Exception e) {
-    		Log.e(getClass().getName(), e.getMessage());
-    	}
-  		return false;
+      }    	
+    	return false;
     }
 
     @Override
