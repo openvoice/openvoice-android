@@ -50,7 +50,7 @@ public class OutboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
     try {
       String user_id = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_USER_ID, "");
       String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
-      String addr = "/users/" + user_id + "/voice_calls?format=json&token=" + token; 
+      String addr = "/users/" + user_id + "/outgoing_calls?format=json&token=" + token; 
       URI uri = new URI(SettingsActivity.getServerUrl(mContext) + addr);
       HttpGet method = new HttpGet(uri);
       ResponseHandler<String> responseHandler = new BasicResponseHandler();
@@ -60,7 +60,7 @@ public class OutboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
           JSONArray jsons = new JSONArray(responseBody);
           for(int i=0; i<jsons.length(); i++) {
             JSONObject json = jsons.getJSONObject(i);            
-            JSONObject message = json.getJSONObject("voice_call");
+            JSONObject message = json.getJSONObject("outgoing_call");
             extract_status(i, message);
           }
         } catch(JSONException jsone) {
@@ -86,7 +86,7 @@ public class OutboundCallDownloadTask extends AsyncTask<String, Void, Boolean> {
   private void extract_status(int i, JSONObject elem)
   throws JSONException {
     HashMap<String, String> md = new HashMap<String, String>();
-    String to = elem.getString("to");
+    String to = elem.getString("callee_number");
   	md.put("caller_id", to);
     md.put("caller_name", ContactManager.getInstance(mContext).getContactNameByPhoneNumber(to));
     md.put("time", elem.getString("created_at"));
