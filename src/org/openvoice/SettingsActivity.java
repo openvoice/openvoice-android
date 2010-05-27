@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 
 public class SettingsActivity extends PreferenceActivity {
 	private static final String OPT_SERVER_URL = "server_url";
-	private static final String OPT_SERVER_URL_DEFAULT = "http://tropovoice.heroku.com";
+	private static final String OPT_SERVER_URL_DEFAULT = "http://openvoice.heroku.com";
 //	private static final String OPT_SERVER_URL_DEFAULT = "http://web1.tunnlr.com:10790";
 
 	@Override
