@@ -168,12 +168,11 @@ public class VoicemailDetailsActivity extends Activity {
       String token = mPrefs.getString(org.openvoice.MessagingsActivity.PREF_TOKEN, "");
       try {
       	String recipientNumber = mRecipientView.getText().toString();
-        String params = "&format=json&user_id=" + mUserID + "&token=" + token + "&voice_call[to]=" + recipientNumber;
-        URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + "/voice_calls/create?" + params);
+        String params = "&format=json&user_id=" + mUserID + "&token=" + token + "&outgoing_call[callee_number]=" + recipientNumber;
+        URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + "/outgoing_calls/create?" + params);
         HttpPost method = new HttpPost(uri);
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = client.execute(method, responseHandler);
-//        System.out.println(responseBody);
       } catch (Exception e) {
         Log.e(getClass().getName(), e.getMessage() == null ? "Error placing call" : e.getMessage());
       } finally {
