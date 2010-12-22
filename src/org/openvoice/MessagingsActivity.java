@@ -103,7 +103,7 @@ public class MessagingsActivity extends Activity {
     private boolean login(String username, String password) {
     	DefaultHttpClient client = new DefaultHttpClient();
     	try {
-    		String url = "/user_sessions/create?user_session[login]=" + username +"&user_session[password]=" + password + "&format=json";
+    		String url = "/user_session?user_session[login]=" + username +"&user_session[password]=" + password + "&format=json";
     		URI uri = new URI(SettingsActivity.getServerUrl(getApplicationContext()) + url);
     		HttpPost method = new HttpPost(uri);
     		ResponseHandler<String>	responseHandler = new BasicResponseHandler();
