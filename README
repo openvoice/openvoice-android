@@ -1,1 +1,8 @@
 Android client for OpenVoice
+
+You need to first sign up for OpenVoice (currently only through a web browser).
+Go to http://openvoice.heroku.com/users/new to sign up.
+Then download the Android client here from the download page:
+Then login and you are good to go.
+
+If you have deployed your own OpenVoice server, then you need to press menu button, then settings and specify the url pointing to your OpenVoice server.  Then go back to the main screen, menu, login.
